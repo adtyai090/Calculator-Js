@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="css/font-awesome.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css"
+    integrity="sha512-kJlvECunwXftkPwyvHbclArO8wszgBGisiLeuDFwNM8ws+wKIw0sv1os3ClWZOcrEB2eRXULYUsm8OVRGJKwGA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+
+  <section class="calculator">
+    <div class="container">
+      <div class="content">
+        <div class="output_value">
+          <input type="text" placeholder="" id="display" readonly>
+        </div>
+        <div class="col-lg-12">
+          <div class="buttons">
+            <button class="clear clear_btn bg-color2 " onclick="clearButton()">AC</button>
+            <button class="clear back_btn bg-color2 " onclick="backspace()">⌫</button>
+            <button class="clear percent_btn bg-color2 operator" onclick="handlePercentage()"><i
+                class="ri-percent-line"></i></button>
+            <button class="operator bg-color" onclick="setOperator('/')"><i class="ri-divide-fill"></i></button>
+            <button onclick="appendNumber('7')">7</button>
+            <button onclick="appendNumber('8')">8</button>
+            <button onclick="appendNumber('9')">9</button>
+            <button class="operator bg-color" onclick="setOperator('*')"><i class="ri-close-line"></i></button>
+
+            <button onclick="appendNumber('4')">4</button>
+            <button onclick="appendNumber('5')">5</button>
+            <button onclick="appendNumber('6')">6</button>
+            <button class="operator bg-color" onclick="setOperator('-')"><i class="ri-subtract-line"></i></button>
+
+            <button onclick="appendNumber('1')">1</button>
+            <button onclick="appendNumber('2')">2</button>
+            <button onclick="appendNumber('3')">3</button>
+            <button class="bg-color" onclick="setOperator('+')"><i class="ri-add-line"></i></button>
+
+            <button class="zero" onclick="appendNumber('0')">0</button>
+            <button onclick="appendNumber('.')">.</button>
+            <button class="equal bg-color" onclick="calculate()"><i class="ri-equal-line"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- ------- -->
+  <script src="js/jquery.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/jquery.js"></script>
+
+  <!--  -->
+  <script>
+    const display = document.getElementById("display");
+    let firstNumber = "";
+    let secondNumber = "";
+    let operator = "";
+
+    const appendNumber = (number) => {
+      // Prevent multiple decimals in the same number
+      if (number === "." && (operator === "" ? firstNumber : secondNumber).includes(".")) return;
+
+      // Remove leading zero if a digit is pressed
+      if (display.value === "0" && number !== ".") display.value = "";
+
+      if (display.value === "0" && number !== ".") {
+        display.value = number;
+      } else {
+        display.value += number;
+      }
+
+      if (operator === "") {
+        firstNumber += number;
+      } else {
+        secondNumber += number;
+      }
+    }
+
+    const setOperator = (symbol) => {
+      if (firstNumber === "") return;
+
+      // If an operator is already set but no second number is typed, replace it
+      if (operator !== "" && secondNumber === "") {
+        display.value = display.value.slice(0, -1);
+      }
+      operator = symbol;
+      display.value += symbol;
+    }
+
+    const calculate = () => {
+      let result;
+      let number1 = parseFloat(firstNumber)
+      let number2 = parseFloat(secondNumber)
+
+      if (isNaN(number1) || isNaN(number2)) return;
+
+      if (operator === "+") {
+        result = number1 + number2;
+      } else if (operator === "-") {
+        result = number1 - number2;
+      } else if (operator === "*") {
+        result = number1 * number2;
+      } else if (operator === "/") {
+        result = number2 !== 0 ? number1 / number2 : "Error";
+      } else if (operator === "%") {
+        result = number1 % number2;
+      } else {
+        return;
+      }
+
+      display.value = result;
+      firstNumber = result.toString();
+      secondNumber = "";
+      operator = "";
+    }
+
+    const clearButton = () => {
+      firstNumber = "";
+      secondNumber = "";
+      operator = "";
+      display.value = "";
+    }
+
+    const backspace = () => {
+      const lastChar = display.value.slice(-1);
+      display.value = display.value.slice(0, -1);
+
+      // Update internal logic variables when deleting
+      if (lastChar === operator) {
+        operator = "";
+      } else if (operator !== "") {
+        secondNumber = secondNumber.slice(0, -1);
+      } else {
+        firstNumber = firstNumber.slice(0, -1);
+      }
+
+      if (display.value === "") firstNumber = "";
+    }
+
+  </script>
+
+</body>
+
+</html>
