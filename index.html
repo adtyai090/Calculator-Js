@@ -20,11 +20,16 @@
     <div class="container">
       <div class="content">
         <div class="output_value">
+          <button onclick="toggleHistory()">
+            <i class="ri-history-line"></i>
+          </button>
+
+          <div class="historyBox" id="history"></div>
           <input type="text" placeholder="" id="display" readonly>
         </div>
         <div class="col-lg-12">
           <div class="buttons">
-            <button class="clear clear_btn bg-color2 " onclick="clearButton()">AC</button>
+            <button class="clear clear_btn bg-color2 " onclick="clearButton()" ondblclick="clearHistory()">AC</button>
             <button class="clear back_btn bg-color2 " onclick="backspace()">⌫</button>
             <button class="clear percent_btn bg-color2 operator" onclick="handlePercentage()"><i
                 class="ri-percent-line"></i></button>
@@ -67,12 +72,11 @@
     let firstNumber = "";
     let secondNumber = "";
     let operator = "";
-
+    let history = [];
+    // Number handling
     const appendNumber = (number) => {
-      // Prevent multiple decimals in the same number
       if (number === "." && (operator === "" ? firstNumber : secondNumber).includes(".")) return;
 
-      // Remove leading zero if a digit is pressed
       if (display.value === "0" && number !== ".") display.value = "";
 
       if (display.value === "0" && number !== ".") {
@@ -87,18 +91,17 @@
         secondNumber += number;
       }
     }
-
+    // Operator handling
     const setOperator = (symbol) => {
       if (firstNumber === "") return;
 
-      // If an operator is already set but no second number is typed, replace it
       if (operator !== "" && secondNumber === "") {
         display.value = display.value.slice(0, -1);
       }
       operator = symbol;
       display.value += symbol;
     }
-
+    // Calculation handling
     const calculate = () => {
       let result;
       let number1 = parseFloat(firstNumber)
@@ -119,25 +122,35 @@
       } else {
         return;
       }
+      history.push(
+        `${firstNumber} ${operator} ${secondNumber} = ${result}`
+      );
+
+      document.getElementById("history").innerHTML =
+        history.join("<br>");
 
       display.value = result;
       firstNumber = result.toString();
       secondNumber = "";
       operator = "";
     }
-
+    // Clear handling
     const clearButton = () => {
       firstNumber = "";
       secondNumber = "";
       operator = "";
       display.value = "";
     }
-
+    // Clear history handling
+    const clearHistory = () => {
+      history = [];
+      document.getElementById("history").innerHTML = "";
+    }
+    // Backspace handling
     const backspace = () => {
       const lastChar = display.value.slice(-1);
       display.value = display.value.slice(0, -1);
 
-      // Update internal logic variables when deleting
       if (lastChar === operator) {
         operator = "";
       } else if (operator !== "") {
@@ -148,10 +161,33 @@
 
       if (display.value === "") firstNumber = "";
     }
-    console.log('first', first)
+    // Percentage handling
+    const handlePercentage = () => {
+      if (firstNumber === "") return;
+
+      if (operator === "") {
+        firstNumber = (parseFloat(firstNumber) / 100).toString();
+        display.value = firstNumber;
+      } else if (secondNumber !== "") {
+        secondNumber = (parseFloat(secondNumber) / 100).toString();
+        display.value = firstNumber + operator + secondNumber;
+      }
+
+    }
+
+    let showHistory = false;
+
+    const toggleHistory = () => {
+
+      const historyBox = document.getElementById("history");
+      showHistory = !showHistory;
+      historyBox.classList.toggle("show");
+
+      historyBox.style.minHeight = "110px";
+      historyBox.style.height = showHistory ? "100% " : "110px";
+    }
 
   </script>
-
 </body>
 
 </html>

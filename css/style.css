@@ -489,6 +489,7 @@ ul.dropdown-menu.fade-up {
   border-radius: 35px;
   margin: 0 auto;
   position: relative;
+  overflow: hidden;
 }
 
 /* .calculator .content .output_value i{
@@ -496,16 +497,41 @@ ul.dropdown-menu.fade-up {
   font-size: 22px;
 } */
 
-.calculator .content .output_value input {
+.calculator .content .output_value {
+  padding-top: 10px;
+  text-align: end;
+  margin-bottom: -3px;
+  height: 210px;
+}
+
+.calculator .content input {
   border: none;
-  padding-top: 70px;
   outline: none;
   font-size: 40px;
   font-weight: 600;
+  text-align: end;
   background: transparent;
   color: #fff;
-  text-align: end;
-  margin-bottom: 18px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.calculator .content .historyBox {
+  display: flex;
+  flex-direction: column-reverse;
+  font-size: 19px;
+  font-weight: 600;
+  text-align: right;
+  color: #9e9e9e;
+  height: 110px;
+  margin-bottom: -5px;
+  line-height: 1.9;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.calculator .content .historyBox::-webkit-scrollbar {
+  display: none;
 }
 
 .calculator .buttons {
@@ -552,5 +578,44 @@ ul.dropdown-menu.fade-up {
 }
 
 .bg-color2 i {
-	font-size: 22px !important;
+  font-size: 22px !important;
+}
+
+.historyBox {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* .historyBox.show {
+	background: aqua;
+	height: 600px !important;
+	position: absolute;
+	z-index: 1111;
+	width: 83%;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+} */
+
+.calculator .content .historyBox.show {
+  background: #17181afa;
+  height: 100% !important;
+  position: absolute;
+  width: 100%;
+  inset: 0;
+  padding: 34px 30px;
+  flex-direction: column;
+}
+
+.calculator .content .output_value button {
+  position: relative;
+  z-index: 111;
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  color: #fff;
+  position: absolute;
+  left: 25px;
+  top: 24px;
 }
